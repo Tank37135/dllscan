@@ -1,32 +1,32 @@
 @echo off
-:: 设置窗口颜色（背景黑色，文字绿色）
+:: Set window color (black background, green text)
 color 0A
-:: 设置窗口标题
-title 记录器
+:: Set window title
+title Logger
 
 setlocal enabledelayedexpansion
 
 :inputPath
-REM 提示用户输入文件夹路径
+REM Prompt user to input folder path
 set "folderPath="
-echo 请输入文件夹路径，或者将文件夹拖入此窗口后按回车：
+echo Please enter the folder path, or drag the folder into this window and press Enter. We will automatically create a .sav file in the same directory as your folder:
 set /p folderPath=
 
-REM 检查用户是否输入了路径
+REM Check if the user has entered a path
 if "%folderPath%"=="" (
-    echo 请输入有效的文件夹路径！
+    echo Please enter a valid folder path!
     goto inputPath
 )
 
-REM 检查路径是否存在
+REM Check if the path exists
 if not exist "%folderPath%" (
-    echo 文件夹路径不存在，请检查后重试。
+    echo The folder path does not exist, please check and try again.
     goto inputPath
 )
 
 set "savFileName=%folderPath%.sav"
 
-REM 检查是否已存在 .sav 文件，并创建唯一的文件名
+REM Check if a .sav file already exists and create a unique file name
 if exist "%savFileName%" (
     set /a count=2
     :loop
@@ -38,11 +38,11 @@ if exist "%savFileName%" (
     set "savFileName=%newSavFileName%"
 )
 
-REM 提示正在写入
-echo 正在写入...
+REM Indicate that writing is in progress
+echo Writing...
 timeout /t 1 >nul
 
-REM 创建或覆盖 .sav 文件
+REM Create or overwrite the .sav file
 (
     for %%i in ("%folderPath%\*") do (
         set "fileName=%%~nxi"
@@ -50,9 +50,9 @@ REM 创建或覆盖 .sav 文件
     )
 ) > "%savFileName%"
 
-echo 文件列表已保存到 "%savFileName%"
-echo 按任意键以继续...
+echo The file list has been saved to "%savFileName%"
+echo Press any key to continue...
 pause >nul
 
-REM 允许用户再次操作
+REM Allow the user to perform another action
 goto inputPath
